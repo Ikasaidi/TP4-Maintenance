@@ -27,5 +27,5 @@ jobs:
 
       - name: authentication et push de l'image docker
         run: |
-          echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          echo "${{ secrets.GHCR_TOKEN_REPO }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
           docker push ghcr.io/ikasaidi/tp4-maintenance:$(git rev-parse --short HEAD)
