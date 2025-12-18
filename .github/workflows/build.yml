@@ -2,9 +2,7 @@ name: Docker Image CI/CD
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
@@ -18,14 +16,10 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
 
-      - name: compilation maven
-        working-directory: ./src/api/
-        run: mvn clean package -DskipTests
+      - name: Build Docker image
+        run: docker build -t ghcr.io/ikasaidi/tp4-maintenance:${{ github.sha }} .
 
-      - name: build docker image
-        run: docker build -t ghcr.io/ikasaidi/tp4-maintenance:$(git rev-parse --short HEAD) -f ./Dockerfile .
-
-      - name: authentication et push de l'image docker
+      - name: Push Docker image
         run: |
           echo "${{ secrets.GHCR_TOKEN_REPO }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
-          docker push ghcr.io/ikasaidi/tp4-maintenance:$(git rev-parse --short HEAD)
+          docker push ghcr.io/ikasaidi/tp4-maintenance:${{ github.sha }}
